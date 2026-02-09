@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title></title>
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/black.css" id="theme" />
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+	<link rel="stylesheet" href="plugin/customcontrols/style.css">
+
+
+
+    <script defer src="dist/fontawesome/all.min.js"></script>
+
+	<script type="text/javascript">
+		var forgetPop = true;
+		function onPopState(event) {
+			if(forgetPop){
+				forgetPop = false;
+			} else {
+				parent.postMessage(event.target.location.href, "app://obsidian.md");
+			}
+        }
+		window.onpopstate = onPopState;
+		window.onmessage = event => {
+			if(event.data == "reload"){
+				window.document.location.reload();
+			}
+			forgetPop = true;
+		}
+
+		function fitElements(){
+			const itemsToFit = document.getElementsByClassName('fitText');
+			for (const item in itemsToFit) {
+				if (Object.hasOwnProperty.call(itemsToFit, item)) {
+					var element = itemsToFit[item];
+					fitElement(element,1, 1000);
+					element.classList.remove('fitText');
+				}
+			}
+		}
+
+		function fitElement(element, start, end){
+
+			let size = (end + start) / 2;
+			element.style.fontSize = `${size}px`;
+
+			if(Math.abs(start - end) < 1){
+				while(element.scrollHeight > element.offsetHeight){
+					size--;
+					element.style.fontSize = `${size}px`;
+				}
+				return;
+			}
+
+			if(element.scrollHeight > element.offsetHeight){
+				fitElement(element, start, size);
+			} else {
+				fitElement(element, size, end);
+			}		
+		}
+
+
+		document.onreadystatechange = () => {
+			fitElements();
+			if (document.readyState === 'complete') {
+				if (window.location.href.indexOf("?export") != -1){
+					parent.postMessage(event.target.location.href, "app://obsidian.md");
+				}
+				if (window.location.href.indexOf("print-pdf") != -1){
+					let stateCheck = setInterval(() => {
+						clearInterval(stateCheck);
+						window.print();
+					}, 250);
+				}
+			}
+	};
+
+
+        </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+<style>
+:root {
+    --r-background-color: #1e1e1e; 
+    --r-main-font: 'Inter', sans-serif;
+    --r-main-font-size: 28px; 
+    
+    --ai-blue: #66D9EF;   
+    --ai-green: #A6E22E;  
+    --ai-yellow: #E6DB74; 
+    --ai-red: #F92672;    
+    --text-white: #f8f8f2;
+}
+
+/* Estrutura Master */
+.reveal .slides section {
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important; 
+    align-items: flex-start;
+    text-align: left;
+    padding: 60px 8% 40px 8% !important;
+    box-sizing: border-box;
+}
+
+/* Títulos */
+.reveal h1, .reveal h2 {
+    color: var(--ai-blue) !important;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1.8em;
+    margin: 0 !important;
+    border-left: 8px solid var(--ai-red);
+    padding-left: 20px;
+    flex-shrink: 0;
+}
+
+/* Conteúdo Central */
+.content-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    width: 100%;
+}
+
+.reveal ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.reveal ul li {
+    color: var(--text-white) !important;
+    margin-bottom: 25px; 
+    font-size: 1.1em; 
+    line-height: 1.4;
+    position: relative;
+    padding-left: 45px;
+}
+
+.reveal ul li::before {
+    content: "+";
+    color: var(--ai-yellow);
+    position: absolute;
+    left: 0;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+/* NOVA CLASSE DE DESTAQUE (hl) */
+.hl {
+    color: var(--ai-green) !important;
+    font-weight: 600;
+}
+
+/* Prompt no Rodapé */
+.chat-input-container {
+    width: 100%;
+    background: #2d2d2d;
+    border: 1px solid #444;
+    border-radius: 20px;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.prompt-text {
+    color: var(--ai-yellow);
+    font-size: 0.8em;
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+}
+
+.example-box {
+    background: rgba(102, 217, 239, 0.08);
+    border: 1px dashed var(--ai-blue);
+    padding: 20px;
+    margin-top: 20px;
+    font-size: 0.85em;
+    border-radius: 12px;
+    color: #ddd;
+}
+
+.links-container a {
+    color: var(--ai-blue) !important;
+    text-decoration: none;
+}
+</style>
+
+## IA: Bala de Prata ou Lente de Aumento?
+
+<div class="content-wrapper">
+
+> "A IA não é um gênio da lâmpada, é um <span class="hl">espelho</span>."
+<ul>
+    <li class="fragment">Objetivo: Entender por que o seu <span class="hl">repertório</span> é o multiplicando da inteligência artificial.</li>
+</ul>
+
+</div>
+
+<div class="chat-input-container">
+    <span class="prompt-text">"Pode criar uma introdução impactante sobre como a IA amplifica o conhecimento humano?"</span>
+    <span>➔</span>
+</div>
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+## O Grande Equívoco
+
+<div class="content-wrapper">
+
+<ul>
+    <li class="fragment">Expectativa: Usar a IA para compensar a falta de <span class="hl">fundamentos</span>.</li>
+    <li class="fragment">Realidade: A ferramenta brilha apenas nas mãos de quem sabe o que está <span class="hl">validando</span>.</li>
+</ul>
+
+<div class="example-box fragment">
+<strong>Refinando o Pedido:</strong><br>
+❌ "Escreva um contrato."<br>
+✅ "Atue como um advogado especializado em <span class="hl">Direito Digital</span> e revise estas cláusulas de LGPD."
+</div>
+
+</div>
+
+<div class="chat-input-container">
+    <span class="prompt-text">"Me dê um exemplo prático de como um profissional sênior usa prompts melhor que um júnior."</span>
+    <span>➔</span>
+</div>
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+## Quando a IA Falha: Alucinações
+
+<div class="content-wrapper">
+
+
+
+<ul>
+    <li class="fragment">Alucinações: A IA prioriza a <span class="hl">verossimilhança</span> sobre a verdade factual.</li>
+    <li class="fragment">O Perigo: Receber respostas tecnicamente erradas entregues com <span class="hl">total confiança</span>.</li>
+</ul>
+
+<div class="example-box fragment">
+<strong>Fato Real:</strong> IA citando jurisprudência falsa em tribunais. Ela cria o contexto perfeito, mas os dados são estatísticos, não reais.
+</div>
+
+</div>
+
+<div class="chat-input-container">
+    <span class="prompt-text">"Quais são os sinais de que uma inteligência artificial pode estar alucinando em uma resposta?"</span>
+    <span>➔</span>
+</div>
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+## A Lente de Aumento 🔍
+
+<div class="content-wrapper">
+
+<p class="fragment">A IA é um <span class="hl">multiplicador de eficiência</span>:</p>
+
+<ul>
+    <li class="fragment">Domínio Técnico (10) × IA (10) = <span class="hl">100</span></li>
+    <li class="fragment">Conhecimento Raso (2) × IA (10) = <span class="hl">20</span></li>
+    <li class="fragment">Base Inexistente (0) × IA (10) = <span class="hl">Zero</span></li>
+</ul>
+
+</div>
+
+<div class="chat-input-container">
+    <span class="prompt-text">"Explique a lógica matemática de que a IA não soma valor, ela apenas o multiplica."</span>
+    <span>➔</span>
+</div>
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+## O Profissional Centauro 🐎
+
+<div class="content-wrapper">
+
+
+
+<ul>
+    <li class="fragment">O Humano: Entra com a estratégia, o <span class="hl">contexto</span> e o julgamento ético.</li>
+    <li class="fragment">A Máquina: Entra com o processamento, a <span class="hl">escala</span> e a velocidade.</li>
+    <li class="fragment">O sucesso está na <span class="hl">simbiose</span> entre os dois mundos.</li>
+</ul>
+
+</div>
+
+<div class="chat-input-container">
+    <span class="prompt-text">"Como posso integrar a IA no meu fluxo de trabalho diário sem perder o senso crítico?"</span>
+    <span>➔</span>
+</div>
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 700px; width: 960px; min-height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center" absolute="true">
+
+## Vamos nos conectar?
+
+<div class="content-wrapper">
+
+<div class="links-container">
+    <ul>
+        <li class="fragment">LinkedIn: <a href="https://www.linkedin.com/in/jonhsousa"><span class="hl">www.linkedin.com/in/jonhsousa</span></a></li>
+        <li class="fragment">Website: <a href="https://jonhsousadev.github.io/"><span class="hl">jonhsousadev.github.io</span></a></li>
+    </ul>
+</div>
+
+</div>
+
+<div class="chat-input-container">
+    <span class="prompt-text">"Escreva um agradecimento especial para a plateia e encerre a apresentação com chave de ouro."</span>
+    <span>➔</span>
+</div>
+</div></script></section></div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/zoom/zoom.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/math/math.js"></script>
+	<script src="plugin/mermaid/mermaid.js"></script>
+	<script src="plugin/chart/chart.min.js"></script>
+	<script src="plugin/chart/plugin.js"></script>
+	<script src="plugin/menu/menu.js"></script>
+	<script src="plugin/customcontrols/plugin.js"></script>
+
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+	  function isLight(color) {
+		let hex = color.replace('#', '');
+
+		// convert #fff => #ffffff
+		if(hex.length == 3){
+			hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+		}
+
+		const c_r = parseInt(hex.substr(0, 2), 16);
+		const c_g = parseInt(hex.substr(2, 2), 16);
+		const c_b = parseInt(hex.substr(4, 2), 16);
+		const brightness = ((c_r * 299) + (c_g * 587) + (c_b * 114)) / 1000;
+		return brightness > 155;
+	}
+
+	var bgColor = getComputedStyle(document.documentElement).getPropertyValue('--r-background-color').trim();
+	var isLight = isLight(bgColor);
+
+	if(isLight){
+		document.body.classList.add('has-light-background');
+	} else {
+		document.body.classList.add('has-dark-background');
+	}
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        plugins: [
+          RevealMarkdown,
+          RevealHighlight,
+          RevealZoom,
+          RevealNotes,
+          RevealMath.MathJax3,
+		  RevealMermaid,
+		  RevealChart,
+		  RevealCustomControls,
+		  RevealMenu,
+        ],
+
+
+    	allottedTime: 120 * 1000,
+
+		mathjax3: {
+			mathjax: 'plugin/math/mathjax/tex-mml-chtml.js',
+		},
+		markdown: {
+		  gfm: true,
+		  mangle: true,
+		  pedantic: false,
+		  smartLists: false,
+		  smartypants: false,
+		},
+
+		mermaid: {
+			theme: isLight ? 'default' : 'dark',
+		},
+
+		customcontrols: {
+			controls: [
+			]
+		},
+		menu: {
+			loadIcons: false
+		}
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal().getQueryHash() || {};
+
+      var options = extend(defaultOptions, {"width":960,"height":700,"margin":0.04,"controls":true,"progress":true,"slideNumber":true,"transition":"fade","transitionSpeed":"default"}, queryOptions);
+    </script>
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+
+  <!-- created with Advanced Slides -->
+</html>
